@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { assetUrl } from '../core/asset-url';
 import { agency } from '../core/listings';
 
 @Component({
@@ -8,7 +9,7 @@ import { agency } from '../core/listings';
   imports: [RouterLink],
   template: `
     <section class="hero">
-      <img src="/images/panorama-sierra.jpg" alt="Panorama de la sierra" />
+      <img [src]="img('/images/panorama-sierra.jpg')" alt="Panorama de la sierra" />
       <div class="shade"></div>
       <div class="copy">
         <p class="eyebrow">Nosotros</p>
@@ -131,4 +132,5 @@ import { agency } from '../core/listings';
 })
 export class NosotrosPageComponent {
   readonly agency = agency;
+  readonly img = assetUrl;
 }

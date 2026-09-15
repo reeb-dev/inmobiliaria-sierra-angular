@@ -1,4 +1,5 @@
 import data from '../../assets/data/listings.json';
+import { assetUrl, mapAssetUrls } from './asset-url';
 
 export type Property = {
   id: string;
@@ -31,8 +32,18 @@ export type Agency = {
   originalSite: string;
 };
 
-export const agency = data.agency as Agency;
-export const properties = data.properties as Property[];
+const rawAgency = data.agency as Agency;
+export const agency: Agency = {
+  ...rawAgency,
+  heroImage: assetUrl(rawAgency.heroImage),
+};
+
+export const properties: Property[] = (data.properties as Property[]).map(
+  (p) => ({
+    ...p,
+    images: mapAssetUrls(p.images),
+  }),
+);
 
 export const propertyTypes = Array.from(
   new Set(properties.map((p) => p.type)),

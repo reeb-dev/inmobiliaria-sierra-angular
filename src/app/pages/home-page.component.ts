@@ -7,6 +7,7 @@ import {
   waLink,
   type Property,
 } from '../core/listings';
+import { assetUrl } from '../core/asset-url';
 import { PropertyCardComponent } from '../shared/property-card.component';
 
 @Component({
@@ -118,7 +119,7 @@ import { PropertyCardComponent } from '../shared/property-card.component';
     <section class="wrap why">
       <div class="media-box">
         <img
-          src="/images/villa-ventana.jpg"
+          [src]="img('/images/villa-ventana.jpg')"
           alt="Villa Ventana"
           loading="lazy"
           decoding="async"
@@ -142,19 +143,19 @@ import { PropertyCardComponent } from '../shared/property-card.component';
 
     <section class="wrap strip">
       <img
-        src="/images/cerro-ceferino.jpg"
+        [src]="img('/images/cerro-ceferino.jpg')"
         alt="Cerro Ceferino"
         loading="lazy"
         decoding="async"
       />
       <img
-        src="/images/ingreso-sierra.jpg"
+        [src]="img('/images/ingreso-sierra.jpg')"
         alt="Ingreso a la sierra"
         loading="lazy"
         decoding="async"
       />
       <img
-        src="/images/arroyo-sauce.jpg"
+        [src]="img('/images/arroyo-sauce.jpg')"
         alt="Arroyo Sauce"
         loading="lazy"
         decoding="async"
@@ -164,7 +165,7 @@ import { PropertyCardComponent } from '../shared/property-card.component';
     <section class="cta-band">
       <img
         class="bg"
-        src="/images/formaciones.jpg"
+        [src]="img('/images/formaciones.jpg')"
         alt=""
         loading="lazy"
         decoding="async"
@@ -463,6 +464,7 @@ import { PropertyCardComponent } from '../shared/property-card.component';
 })
 export class HomePageComponent {
   readonly agency = agency;
+  readonly img = assetUrl;
   private readonly homes = homesFirst();
   readonly spotlight: Property | undefined = this.homes[0] ?? properties[0];
   readonly editorial = this.homes.slice(1, 4);
