@@ -1,40 +1,36 @@
 # Inmobiliaria Sierra de la Ventana (Angular)
 
-Sitio inmobiliario en **Angular 19** con inventario y marca de
-[inmobiliariasierradelaventana.com](https://www.inmobiliariasierradelaventana.com/).
+Sitio inmobiliario en **Angular 19**.
 
-## Correr en tu máquina (recomendado)
+## Demo (GitHub Pages)
+
+Cuando el workflow termine:
+
+**https://reeb-dev.github.io/inmobiliaria-sierra-angular/**
+
+## Correr en local
 
 ```bash
-git clone <URL_DE_ESTE_REPO>
+git clone https://github.com/reeb-dev/inmobiliaria-sierra-angular.git
 cd inmobiliaria-sierra-angular
 npm install
 npm start
 ```
 
-Abrí **http://localhost:4200**
-
-Atajos:
+Abrí http://localhost:4200
 
 ```bash
-npm run preview   # sirve el build ya generado
-npm run dev       # Angular CLI con hot reload (puerto 4200)
+npm run dev       # hot reload
+npm run build:pages   # build para GitHub Pages
 ```
 
-## Qué incluye
+## Deploy
 
-- Home editorial con hero full-bleed
-- Catálogo con filtros (`/propiedades`)
-- Ficha (`/propiedades/:slug`)
-- Nosotros, tasaciones y contacto (WhatsApp)
-- Fotos locales en `public/images` y `public/properties`
+El workflow `.github/workflows/deploy-github-pages.yml` publica en Pages
+en cada push a `main`.
 
-## Nota sobre Cloud Agent / preview
-
-Si usás un Cloud Agent de Cursor, el puerto vive en la VM remota.
-Tenés que forwardarlo con el ícono de enchufe (Forwarded Ports) o
-correr el proyecto localmente con los pasos de arriba.
+En el repo de GitHub: **Settings → Pages → Source: GitHub Actions**.
 
 ## Stack
 
-Angular 19 (standalone), TypeScript, SCSS. Fuentes locales.
+Angular 19 (standalone), TypeScript, SCSS.

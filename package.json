@@ -3,13 +3,14 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "npm run build && node scripts/static-server.mjs",
-    "preview": "node scripts/static-server.mjs",
+    "start": "npm run build && PORT=4200 HOST=0.0.0.0 node scripts/static-server.mjs",
+    "preview": "PORT=4200 HOST=0.0.0.0 node scripts/static-server.mjs",
     "dev": "ng serve --port 4200 --host 127.0.0.1",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "serve:static": "node scripts/static-server.mjs"
+    "serve:static": "node scripts/static-server.mjs",
+    "build:pages": "ng build --configuration production --base-href /inmobiliaria-sierra-angular/"
   },
   "private": true,
   "dependencies": {
