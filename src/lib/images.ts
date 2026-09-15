@@ -1,12 +1,12 @@
 /** Fotos reales de Sierra de la Ventana (Wikimedia Commons). */
 export const sierraImages = {
   hero: {
-    src: "/images/hueco-ventana.png",
+    src: "/images/hueco-ventana-hero.jpg",
     alt: "El Hueco de la Ventana, formación icónica de Sierra de la Ventana",
     credit: "Hueco de la Ventana — Sierra de la Ventana",
   },
   hueco: {
-    src: "/images/hueco-ventana.png",
+    src: "/images/hueco-ventana-hero.jpg",
     alt: "El Hueco de la Ventana, formación icónica de Sierra de la Ventana",
     credit: "Hueco de la Ventana — Sierra de la Ventana",
   },
