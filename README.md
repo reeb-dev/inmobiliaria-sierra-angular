@@ -20,7 +20,7 @@ npm install
 npm start
 ```
 
-Abrí [http://127.0.0.1:43123](http://127.0.0.1:43123).
+Abrí [http://localhost:43123](http://localhost:43123).
 
 Solo servir un build ya hecho:
 

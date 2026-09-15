@@ -8,7 +8,8 @@ const root = path.resolve(
   '../dist/sierra-app/browser',
 );
 const port = Number(process.env.PORT || 43123);
-const host = process.env.HOST || '0.0.0.0';
+// localhost (no IP pública): el preview de Cursor reenvía este puerto
+const host = process.env.HOST || '127.0.0.1';
 
 const mime = {
   '.html': 'text/html; charset=utf-8',
@@ -61,5 +62,5 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(port, host, () => {
-  console.log(`STATIC_OK http://127.0.0.1:${port}`);
+  console.log(`STATIC_OK http://localhost:${port}`);
 });
