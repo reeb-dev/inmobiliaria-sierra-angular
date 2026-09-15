@@ -46,20 +46,22 @@ import { PropertyCardComponent } from '../shared/property-card.component';
 
     @if (spotlight; as p) {
       <section class="featured">
-        <img class="bg" [src]="p.images[0]" [alt]="p.title" />
-        <div class="shade dark"></div>
-        <div class="copy">
-          <p class="eyebrow">Destacada · {{ p.type }}</p>
-          <h2>{{ p.title }}</h2>
-          <p class="loc">{{ p.location }}</p>
-          <p class="price">{{ p.price }}</p>
-          <div class="cta">
-            <a class="btn light" [routerLink]="['/propiedades', p.slug]"
-              >Ver esta propiedad</a
-            >
-            <a class="btn wa" [href]="wa(p)" target="_blank" rel="noreferrer"
-              >Consultar</a
-            >
+        <div class="featured-frame">
+          <img class="featured-photo" [src]="p.images[0]" [alt]="p.title" />
+          <div class="featured-shade"></div>
+          <div class="featured-copy">
+            <p class="eyebrow">Destacada · {{ p.type }}</p>
+            <h2>{{ p.title }}</h2>
+            <p class="loc">{{ p.location }}</p>
+            <p class="price">{{ p.price }}</p>
+            <div class="cta">
+              <a class="btn light" [routerLink]="['/propiedades', p.slug]"
+                >Ver esta propiedad</a
+              >
+              <a class="btn wa" [href]="wa(p)" target="_blank" rel="noreferrer"
+                >Consultar</a
+              >
+            </div>
           </div>
         </div>
       </section>
@@ -189,7 +191,6 @@ import { PropertyCardComponent } from '../shared/property-card.component';
   styles: [
     `
       .hero,
-      .featured,
       .cta-band {
         position: relative;
         min-height: 90vh;
@@ -197,8 +198,76 @@ import { PropertyCardComponent } from '../shared/property-card.component';
         color: #fff;
       }
       .featured {
-        min-height: min(78vh, 44rem);
-        isolation: isolate;
+        padding: 1.5rem 1.25rem 0.5rem;
+        color: #fff;
+      }
+      .featured-frame {
+        position: relative;
+        overflow: hidden;
+        border-radius: 1.35rem;
+        min-height: min(72vh, 40rem);
+        display: flex;
+        align-items: flex-end;
+      }
+      .featured-photo {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center 40%;
+      }
+      .featured-shade {
+        position: absolute;
+        inset: 0;
+        background:
+          linear-gradient(
+            180deg,
+            rgba(12, 28, 22, 0.12) 0%,
+            rgba(12, 28, 22, 0.42) 45%,
+            rgba(12, 28, 22, 0.86) 100%
+          ),
+          linear-gradient(
+            90deg,
+            rgba(12, 28, 22, 0.82) 0%,
+            rgba(12, 28, 22, 0.45) 42%,
+            rgba(12, 28, 22, 0.12) 72%,
+            transparent 100%
+          );
+      }
+      .featured-copy {
+        position: relative;
+        z-index: 1;
+        width: 100%;
+        max-width: 36rem;
+        padding: 2.75rem 1.75rem 2.75rem;
+        box-sizing: border-box;
+      }
+      .featured-copy h2 {
+        margin: 0.65rem 0 0;
+        max-width: 16ch;
+        font-size: clamp(1.85rem, 4.5vw, 2.75rem);
+      }
+      .featured-copy .loc {
+        margin-top: 0.9rem;
+      }
+      .featured-copy .price {
+        margin-top: 1.15rem;
+      }
+      .featured-copy .cta {
+        margin-top: 1.9rem;
+      }
+      @media (min-width: 768px) {
+        .featured {
+          padding: 2rem 1.75rem 0.75rem;
+        }
+        .featured-frame {
+          align-items: center;
+          min-height: min(68vh, 38rem);
+        }
+        .featured-copy {
+          padding: 3.5rem 3.25rem;
+        }
       }
       .cta-band {
         min-height: auto;
@@ -215,9 +284,6 @@ import { PropertyCardComponent } from '../shared/property-card.component';
       .hero .bg {
         object-position: center 35%;
       }
-      .featured .bg {
-        object-position: center 40%;
-      }
       .shade {
         position: absolute;
         inset: 0;
@@ -227,22 +293,6 @@ import { PropertyCardComponent } from '../shared/property-card.component';
           rgba(0, 0, 0, 0.2) 55%,
           transparent
         );
-      }
-      .shade.dark {
-        background:
-          linear-gradient(
-            180deg,
-            rgba(0, 0, 0, 0.2) 0%,
-            rgba(0, 0, 0, 0.55) 55%,
-            rgba(0, 0, 0, 0.78) 100%
-          ),
-          linear-gradient(
-            90deg,
-            rgba(0, 0, 0, 0.72) 0%,
-            rgba(0, 0, 0, 0.35) 42%,
-            rgba(0, 0, 0, 0.08) 72%,
-            transparent 100%
-          );
       }
       .shade.deep {
         background: color-mix(in srgb, var(--forest-deep) 88%, transparent);
@@ -258,27 +308,6 @@ import { PropertyCardComponent } from '../shared/property-card.component';
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
-      }
-      .featured .copy {
-        padding: clamp(2.5rem, 8vh, 5rem) clamp(1.5rem, 5vw, 3rem)
-          clamp(2.25rem, 6vh, 3.75rem);
-        gap: 0;
-      }
-      .featured .copy > * {
-        max-width: 28rem;
-      }
-      .featured h2 {
-        margin-top: 0.55rem;
-        max-width: 16ch;
-      }
-      .featured .loc {
-        margin-top: 0.75rem;
-      }
-      .featured .price {
-        margin-top: 1rem;
-      }
-      .featured .cta {
-        margin-top: 1.75rem;
       }
       .copy.short {
         padding: 3rem 1.5rem;
