@@ -7,13 +7,23 @@ import {
   ShieldCheck,
   Trees,
 } from "lucide-react";
+import { EditorialProperty } from "@/components/editorial-property";
+import { FeaturedProperty } from "@/components/featured-property";
 import { PropertyCard } from "@/components/property-card";
 import { btn } from "@/components/ui/button";
-import { agency, properties } from "@/lib/listings";
 import { sierraImages } from "@/lib/images";
+import { agency, properties } from "@/lib/listings";
 
 export default function HomePage() {
-  const featured = properties.slice(0, 6);
+  const homes = properties.filter(
+    (p) =>
+      ["Casa", "Cabaña", "Casaquinta"].includes(p.type) && p.images.length > 0,
+  );
+  const spotlight = homes[0] ?? properties[0];
+  const editorial = homes.slice(1, 4);
+  const more = (homes.length > 4 ? homes.slice(4) : properties)
+    .filter((p) => p.id !== spotlight?.id)
+    .slice(0, 3);
 
   return (
     <>
@@ -60,34 +70,60 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="relative mx-auto max-w-6xl px-4 py-16 md:px-6 md:py-20">
-        <div className="sierra-grid pointer-events-none absolute inset-x-0 top-0 h-40 opacity-40" />
+      {spotlight ? <FeaturedProperty property={spotlight} /> : null}
+
+      <section className="mx-auto max-w-6xl space-y-16 px-4 py-16 md:px-6 md:py-24">
         <div className="max-w-2xl">
           <p className="text-xs uppercase tracking-[0.22em] text-leaf">
-            Destacadas
+            Vivir en las sierras
           </p>
-          <h2 className="mt-2 font-display text-3xl text-ink md:text-4xl">
-            Propiedades para vivir o invertir en las sierras
+          <h2 className="mt-2 font-display text-3xl text-ink md:text-5xl">
+            Casas y cabañas con carácter
           </h2>
           <p className="mt-3 text-ink-soft">
-            Selección actual de lotes, casas y cabañas. Filtrá por tipo o zona en
-            el catálogo completo.
+            Una selección editorial: menos grilla, más deseo. Cada propiedad con
+            su historia y su entorno.
           </p>
         </div>
-        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {featured.map((property) => (
-            <PropertyCard key={property.id} property={property} />
+
+        <div className="space-y-16 md:space-y-24">
+          {editorial.map((property, index) => (
+            <EditorialProperty
+              key={property.id}
+              property={property}
+              reverse={index % 2 === 1}
+            />
           ))}
-        </div>
-        <div className="mt-8">
-          <Link href="/propiedades" className={btn.primarySm}>
-            Ver todas las propiedades
-            <ArrowRight className="size-4" />
-          </Link>
         </div>
       </section>
 
-      <section className="border-y border-line bg-white/40">
+      {more.length > 0 ? (
+        <section className="border-y border-line bg-white/35">
+          <div className="mx-auto max-w-6xl px-4 py-16 md:px-6 md:py-20">
+            <div className="flex flex-wrap items-end justify-between gap-4">
+              <div>
+                <p className="text-xs uppercase tracking-[0.22em] text-leaf">
+                  Más opciones
+                </p>
+                <h2 className="mt-2 font-display text-3xl md:text-4xl">
+                  Otras propiedades para explorar
+                </h2>
+              </div>
+              <Link href="/propiedades" className={btn.primarySm}>
+                Ver catálogo
+                <ArrowRight className="size-4" />
+              </Link>
+            </div>
+            <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {more.map((property) => (
+                <PropertyCard key={property.id} property={property} />
+              ))}
+            </div>
+          </div>
+        </section>
+      ) : null}
+
+      <section className="border-b border-line bg-white/40">
         <div className="mx-auto grid max-w-6xl items-center gap-10 px-4 py-16 md:grid-cols-2 md:px-6 md:py-20">
           <div className="relative aspect-[4/3] overflow-hidden rounded-3xl shadow-[0_30px_60px_-40px_rgba(19,36,28,0.7)]">
             <Image
