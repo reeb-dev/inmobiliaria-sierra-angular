@@ -3,12 +3,13 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "npm run build && npx --yes serve dist/sierra-app/browser -l tcp://0.0.0.0:43123 -s --no-port-switching",
-    "preview": "npx --yes serve dist/sierra-app/browser -l tcp://0.0.0.0:43123 -s --no-port-switching",
+    "start": "npm run build && node scripts/static-server.mjs",
+    "preview": "node scripts/static-server.mjs",
     "dev": "ng serve --port 43123 --host 0.0.0.0 --disable-host-check",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "serve:static": "node scripts/static-server.mjs"
   },
   "private": true,
   "dependencies": {
