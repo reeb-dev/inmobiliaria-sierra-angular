@@ -7,7 +7,7 @@ const root = path.resolve(
   path.dirname(fileURLToPath(import.meta.url)),
   '../dist/sierra-app/browser',
 );
-const port = Number(process.env.PORT || 43123);
+const port = Number(process.env.PORT || 4200);
 // 0.0.0.0: el forward de Cursor llega por la interfaz del contenedor.
 // En tu máquina igual abrís http://localhost:43123
 const host = process.env.HOST || '0.0.0.0';

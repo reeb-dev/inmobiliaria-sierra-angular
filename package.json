@@ -1,11 +1,11 @@
 {
-  "name": "inmobiliaria-sierra-de-la-ventana",
+  "name": "inmobiliaria-sierra-angular",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
     "start": "npm run build && node scripts/static-server.mjs",
     "preview": "node scripts/static-server.mjs",
-    "dev": "ng serve --port 43123 --host localhost --disable-host-check",
+    "dev": "ng serve --port 4200 --host 127.0.0.1",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
