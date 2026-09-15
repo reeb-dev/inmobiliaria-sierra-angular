@@ -1,9 +1,9 @@
 /** Fotos reales de Sierra de la Ventana (Wikimedia Commons). */
 export const sierraImages = {
   hero: {
-    src: "/images/cerro-ceferino.jpg",
-    alt: "Vista de las sierras desde Cerro Ceferino, Sierra de la Ventana",
-    credit: "Banfield / Wikimedia Commons",
+    src: "/images/cerro-tres-picos.jpg",
+    alt: "Cerro Tres Picos, el pico más alto de Sierra de la Ventana (1.239 m)",
+    credit: "Wikimedia Commons — Cerro Tres Picos",
   },
   villa: {
     src: "/images/villa-ventana.jpg",
