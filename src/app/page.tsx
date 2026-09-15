@@ -23,11 +23,11 @@ export default function HomePage() {
           alt={sierraImages.hero.alt}
           fill
           priority
-          className="object-cover object-[center_40%]"
+          className="object-cover object-[center_35%]"
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-forest-deep/45 to-transparent" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/65 via-transparent to-black/20" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/55 via-black/25 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/15 to-black/10" />
 
         <div className="relative mx-auto flex min-h-[92vh] max-w-6xl flex-col justify-end px-4 pb-16 pt-28 md:justify-center md:px-6 md:pb-24 md:pt-20">
           <p className="animate-rise font-display text-4xl leading-none text-white sm:text-5xl md:text-7xl lg:text-8xl">
