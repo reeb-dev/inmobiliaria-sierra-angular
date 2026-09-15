@@ -8,8 +8,9 @@ const root = path.resolve(
   '../dist/sierra-app/browser',
 );
 const port = Number(process.env.PORT || 43123);
-// localhost (no IP pública): el preview de Cursor reenvía este puerto
-const host = process.env.HOST || '127.0.0.1';
+// 0.0.0.0: el forward de Cursor llega por la interfaz del contenedor.
+// En tu máquina igual abrís http://localhost:43123
+const host = process.env.HOST || '0.0.0.0';
 
 const mime = {
   '.html': 'text/html; charset=utf-8',
