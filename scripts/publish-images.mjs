@@ -146,8 +146,9 @@ async function main() {
         }
         next.push(await enhanceAndStore(property.id, src, i));
       }
-      property.images = [...next, ...property.images.slice(count)];
-      console.log(`✓ ${property.id}: ${count} fotos publicadas/mejoradas`);
+      // Solo URLs locales: evita saturar /_next/image con el CDN remoto.
+      property.images = next;
+      console.log(`✓ ${property.id}: ${next.length} fotos locales`);
     } catch (error) {
       console.error(`✗ ${property.id}:`, error.message ?? error);
     }

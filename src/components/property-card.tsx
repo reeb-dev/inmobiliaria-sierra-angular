@@ -18,8 +18,9 @@ export function PropertyCard({ property }: { property: Property }) {
               alt={property.title}
               fill
               sizes="(max-width:768px) 100vw, 33vw"
-              quality={90}
-              className="object-cover transition duration-700 ease-out group-hover:scale-[1.04]"
+              quality={85}
+              unoptimized={image.startsWith("/")}
+                            className="object-cover transition duration-700 ease-out group-hover:scale-[1.04]"
             />
           ) : (
             <div className="flex h-full items-center justify-center bg-bg-deep text-sm text-ink-soft">

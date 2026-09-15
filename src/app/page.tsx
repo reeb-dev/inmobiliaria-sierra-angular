@@ -33,6 +33,7 @@ export default function HomePage() {
           alt={sierraImages.hero.alt}
           fill
           priority
+          unoptimized
           className="object-cover object-[center_35%]"
           sizes="100vw"
         />

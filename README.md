@@ -43,11 +43,20 @@ El pipeline (Sharp):
 
 ```bash
 npm install
-npm run publish:images:demo
-npm run dev -- --port 43123
+npm run publish:images        # opcional: localiza/mejora fotos del catálogo
+npm run build
+npm run start -- --port 43123 --hostname 0.0.0.0
 ```
 
 Abrí [http://127.0.0.1:43123](http://127.0.0.1:43123).
+
+Para desarrollo (puede ser más pesado por HMR):
+
+```bash
+npm run dev -- --port 43123 --hostname 0.0.0.0
+```
+
+> Tip: si el preview se “clava”, usá `build` + `start` (modo producción). Las fotos del catálogo viven en `public/properties/` para no depender del CDN remoto.
 
 ## Stack
 
