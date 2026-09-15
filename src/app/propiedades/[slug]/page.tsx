@@ -65,13 +65,18 @@ export default async function PropertyDetailPage({ params }: Props) {
           <PropertyGallery images={property.images} title={property.title} />
 
           <div>
-            <div className="flex flex-wrap items-center gap-2">
-              <span className="rounded-md bg-forest/10 px-2.5 py-1 text-[11px] uppercase tracking-wide text-forest">
-                {property.status === "alquiler" ? "Alquiler" : "Venta"}
-              </span>
-              <span className="rounded-md border border-line px-2.5 py-1 text-[11px] uppercase tracking-wide text-ink-soft">
-                {property.type}
-              </span>
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="rounded-md bg-forest/10 px-2.5 py-1 text-[11px] uppercase tracking-wide text-forest">
+                  {property.status === "alquiler" ? "Alquiler" : "Venta"}
+                </span>
+                <span className="rounded-md border border-line px-2.5 py-1 text-[11px] uppercase tracking-wide text-ink-soft">
+                  {property.type}
+                </span>
+              </div>
+              <p className="font-display text-2xl text-forest md:text-3xl">
+                {property.price}
+              </p>
             </div>
             <h1 className="mt-3 font-display text-3xl leading-tight text-ink md:text-5xl">
               {property.title}
@@ -80,7 +85,6 @@ export default async function PropertyDetailPage({ params }: Props) {
               <MapPin className="mt-0.5 size-4 shrink-0" />
               {property.location}
             </p>
-            <p className="mt-4 font-display text-3xl text-forest">{property.price}</p>
           </div>
 
           <div className="flex flex-wrap gap-4 rounded-2xl border border-line bg-mist/70 p-4">
@@ -116,6 +120,7 @@ export default async function PropertyDetailPage({ params }: Props) {
         <aside className="space-y-4 lg:sticky lg:top-24 lg:self-start">
           <div className="rounded-2xl border border-line bg-mist/80 p-5">
             <p className="font-display text-xl">¿Te interesa?</p>
+            <p className="mt-1 font-display text-2xl text-forest">{property.price}</p>
             <p className="mt-1 text-sm text-ink-soft">
               Respondemos rápido por teléfono o WhatsApp.
             </p>
