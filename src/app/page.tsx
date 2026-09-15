@@ -26,8 +26,8 @@ export default function HomePage() {
           className="object-cover object-[center_40%]"
           sizes="100vw"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-forest-deep/90 via-forest-deep/65 to-forest-deep/35" />
-        <div className="absolute inset-0 bg-gradient-to-t from-forest-deep/80 via-transparent to-forest-deep/30" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/75 via-forest-deep/55 to-forest-deep/25" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/25" />
 
         <div className="relative mx-auto flex min-h-[92vh] max-w-6xl flex-col justify-end px-4 pb-16 pt-28 md:justify-center md:px-6 md:pb-24 md:pt-20">
           <p className="animate-rise font-display text-4xl leading-none text-white sm:text-5xl md:text-7xl lg:text-8xl">

@@ -49,7 +49,7 @@ export const btn = {
   outlineOnDark:
     "inline-flex h-12 items-center justify-center gap-2 rounded-md border-2 border-white bg-white px-6 text-base font-semibold text-forest-deep shadow-[0_12px_28px_-16px_rgba(19,36,28,0.85)] transition hover:bg-glow",
   whatsapp:
-    "inline-flex h-12 items-center justify-center gap-2 rounded-md bg-[#128C7E] px-6 text-base font-semibold text-white shadow-[0_12px_28px_-16px_rgba(18,140,126,0.9)] transition hover:bg-[#0E6B60]",
+    "inline-flex h-12 items-center justify-center gap-2 rounded-md border-2 border-white bg-[#25D366] px-6 text-base font-bold text-white shadow-[0_14px_32px_-12px_rgba(0,0,0,0.55)] ring-2 ring-white/80 transition hover:bg-[#1EBE57]",
   phone:
     "inline-flex items-center gap-2 rounded-md bg-forest px-3 py-2 text-sm font-semibold text-white transition hover:bg-forest-deep",
 } as const;
