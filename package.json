@@ -3,8 +3,9 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --port 43123 --host 0.0.0.0",
-    "dev": "ng serve --port 43123 --host 0.0.0.0",
+    "start": "npm run build && npx --yes serve dist/sierra-app/browser -l tcp://0.0.0.0:43123 -s --no-port-switching",
+    "preview": "npx --yes serve dist/sierra-app/browser -l tcp://0.0.0.0:43123 -s --no-port-switching",
+    "dev": "ng serve --port 43123 --host 0.0.0.0 --disable-host-check",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"

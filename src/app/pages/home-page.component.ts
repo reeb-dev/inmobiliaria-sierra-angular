@@ -15,7 +15,13 @@ import { PropertyCardComponent } from '../shared/property-card.component';
   imports: [RouterLink, PropertyCardComponent],
   template: `
     <section class="hero">
-      <img class="bg" [src]="agency.heroImage" alt="Hueco de la Ventana" />
+      <img
+        class="bg"
+        [src]="agency.heroImage"
+        alt="Hueco de la Ventana"
+        fetchpriority="high"
+        decoding="async"
+      />
       <div class="shade"></div>
       <div class="copy">
         <h1>{{ agency.name }}</h1>
@@ -111,7 +117,12 @@ import { PropertyCardComponent } from '../shared/property-card.component';
 
     <section class="wrap why">
       <div class="media-box">
-        <img src="/images/villa-ventana.jpg" alt="Villa Ventana" />
+        <img
+          src="/images/villa-ventana.jpg"
+          alt="Villa Ventana"
+          loading="lazy"
+          decoding="async"
+        />
       </div>
       <div>
         <p class="eyebrow leaf">Por qué nosotros</p>
@@ -130,13 +141,34 @@ import { PropertyCardComponent } from '../shared/property-card.component';
     </section>
 
     <section class="wrap strip">
-      <img src="/images/cerro-ceferino.jpg" alt="Cerro Ceferino" />
-      <img src="/images/ingreso-sierra.jpg" alt="Ingreso a la sierra" />
-      <img src="/images/arroyo-sauce.jpg" alt="Arroyo Sauce" />
+      <img
+        src="/images/cerro-ceferino.jpg"
+        alt="Cerro Ceferino"
+        loading="lazy"
+        decoding="async"
+      />
+      <img
+        src="/images/ingreso-sierra.jpg"
+        alt="Ingreso a la sierra"
+        loading="lazy"
+        decoding="async"
+      />
+      <img
+        src="/images/arroyo-sauce.jpg"
+        alt="Arroyo Sauce"
+        loading="lazy"
+        decoding="async"
+      />
     </section>
 
     <section class="cta-band">
-      <img class="bg" src="/images/formaciones.jpg" alt="" />
+      <img
+        class="bg"
+        src="/images/formaciones.jpg"
+        alt=""
+        loading="lazy"
+        decoding="async"
+      />
       <div class="shade deep"></div>
       <div class="copy short">
         <h2>¿Querés vender o saber cuánto vale tu propiedad?</h2>

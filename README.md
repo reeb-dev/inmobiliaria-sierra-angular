@@ -13,6 +13,8 @@ Sitio inmobiliario en **Angular 19** con el inventario y la identidad de
 
 ## Cómo correrlo
 
+Modo estable (recomendado para preview): build + servidor estático, sin HMR.
+
 ```bash
 npm install
 npm start
@@ -20,12 +22,18 @@ npm start
 
 Abrí [http://127.0.0.1:43123](http://127.0.0.1:43123).
 
-Build de producción:
+Solo servir un build ya hecho:
 
 ```bash
-npm run build
+npm run preview
+```
+
+Desarrollo con hot reload:
+
+```bash
+npm run dev
 ```
 
 ## Stack
 
-Angular 19 (standalone), TypeScript, SCSS.
+Angular 19 (standalone), TypeScript, SCSS. Fuentes locales (sin Google Fonts en runtime).
