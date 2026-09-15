@@ -197,7 +197,8 @@ import { PropertyCardComponent } from '../shared/property-card.component';
         color: #fff;
       }
       .featured {
-        min-height: 78vh;
+        min-height: min(78vh, 44rem);
+        isolation: isolate;
       }
       .cta-band {
         min-height: auto;
@@ -214,6 +215,9 @@ import { PropertyCardComponent } from '../shared/property-card.component';
       .hero .bg {
         object-position: center 35%;
       }
+      .featured .bg {
+        object-position: center 40%;
+      }
       .shade {
         position: absolute;
         inset: 0;
@@ -225,25 +229,56 @@ import { PropertyCardComponent } from '../shared/property-card.component';
         );
       }
       .shade.dark {
-        background: linear-gradient(
-          90deg,
-          rgba(0, 0, 0, 0.78),
-          rgba(0, 0, 0, 0.35),
-          rgba(0, 0, 0, 0.15)
-        );
+        background:
+          linear-gradient(
+            180deg,
+            rgba(0, 0, 0, 0.2) 0%,
+            rgba(0, 0, 0, 0.55) 55%,
+            rgba(0, 0, 0, 0.78) 100%
+          ),
+          linear-gradient(
+            90deg,
+            rgba(0, 0, 0, 0.72) 0%,
+            rgba(0, 0, 0, 0.35) 42%,
+            rgba(0, 0, 0, 0.08) 72%,
+            transparent 100%
+          );
       }
       .shade.deep {
         background: color-mix(in srgb, var(--forest-deep) 88%, transparent);
       }
       .copy {
         position: relative;
+        box-sizing: border-box;
+        width: 100%;
         max-width: 72rem;
         margin: 0 auto;
-        padding: 7rem 1.25rem 3.5rem;
+        padding: 7rem clamp(1.25rem, 4vw, 2.5rem) 3.5rem;
         min-height: inherit;
         display: flex;
         flex-direction: column;
         justify-content: flex-end;
+      }
+      .featured .copy {
+        padding: clamp(2.5rem, 8vh, 5rem) clamp(1.5rem, 5vw, 3rem)
+          clamp(2.25rem, 6vh, 3.75rem);
+        gap: 0;
+      }
+      .featured .copy > * {
+        max-width: 28rem;
+      }
+      .featured h2 {
+        margin-top: 0.55rem;
+        max-width: 16ch;
+      }
+      .featured .loc {
+        margin-top: 0.75rem;
+      }
+      .featured .price {
+        margin-top: 1rem;
+      }
+      .featured .cta {
+        margin-top: 1.75rem;
       }
       .copy.short {
         padding: 3rem 1.5rem;
