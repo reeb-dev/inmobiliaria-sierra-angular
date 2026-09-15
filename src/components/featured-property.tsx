@@ -18,6 +18,7 @@ export function FeaturedProperty({ property }: { property: Property }) {
           alt={property.title}
           fill
           priority
+          quality={90}
           className="object-cover"
           sizes="100vw"
         />

@@ -47,10 +47,10 @@
       "bathrooms": 2,
       "surface": "170",
       "images": [
-        "https://storage.googleapis.com/portales-prod-images/6051/property-images/2026/9/d5785305-7ac3-40b2-9bad-6471ff4febf7_wm.jpeg",
-        "https://storage.googleapis.com/portales-prod-images/6051/property-images/2026/9/368e41f8-6401-4d4a-9147-80ed527f738d_wm.jpeg",
-        "https://storage.googleapis.com/portales-prod-images/6051/property-images/2026/9/425753bb-f370-4da2-8ddb-35d493a8d949_wm.jpeg",
-        "https://storage.googleapis.com/portales-prod-images/6051/property-images/2026/9/9b2e952f-7407-416e-9935-8084742c4205_wm.jpeg",
+        "/properties/sie-232118/01-0a59cb692036.jpg",
+        "/properties/sie-232118/02-736556ac4997.jpg",
+        "/properties/sie-232118/03-13085f3a5133.jpg",
+        "/properties/sie-232118/04-d648ac3dec8b.jpg",
         "https://storage.googleapis.com/portales-prod-images/6051/property-images/2026/9/42d05c39-3903-43ff-9025-2453d06ba2c1_wm.jpeg",
         "https://storage.googleapis.com/portales-prod-images/6051/property-images/2026/9/f97e6b64-b47a-40ae-b5f1-7fe641bbaee2_wm.jpeg"
       ],
@@ -69,10 +69,10 @@
       "bathrooms": 1,
       "surface": "130",
       "images": [
-        "https://storage.googleapis.com/portales-prod-images/6051/property-images/2026/9/895652f2-5287-4938-aa96-c7eaabf6ae6a_wm.jpeg",
-        "https://storage.googleapis.com/portales-prod-images/6051/property-images/2026/9/3c0643b4-48fb-45f7-861a-b9a3a8ffb317_wm.jpeg",
-        "https://storage.googleapis.com/portales-prod-images/6051/property-images/2026/9/84d41293-106b-46de-a7c8-512f321957c2_wm.jpeg",
-        "https://storage.googleapis.com/portales-prod-images/6051/property-images/2026/9/88cf877e-e793-43db-bf30-5ebc516488ed_wm.jpeg",
+        "/properties/sie-194672/01-a728e0598bd6.jpg",
+        "/properties/sie-194672/02-4ba5b8092f30.jpg",
+        "/properties/sie-194672/03-3c09ccb3eb77.jpg",
+        "/properties/sie-194672/04-4e96b2584e46.jpg",
         "https://storage.googleapis.com/portales-prod-images/6051/property-images/2026/9/9077ccd3-f09c-472a-b89f-d53c856f7029_wm.jpeg",
         "https://storage.googleapis.com/portales-prod-images/6051/property-images/2026/9/b186d5f5-5c4e-4c5a-a9cb-ea91aaa8e6a0_wm.jpeg"
       ],
@@ -91,10 +91,10 @@
       "bathrooms": 3,
       "surface": "186",
       "images": [
-        "https://storage.googleapis.com/portales-prod-images/6051/property-images/2026/8/8635409c-7d30-4d7c-b9a0-8e45661a3d1a_wm.jpeg",
-        "https://storage.googleapis.com/portales-prod-images/6051/property-images/2026/8/7f64286a-67aa-4611-8e4e-d0e82f0c414c_wm.jpeg",
-        "https://storage.googleapis.com/portales-prod-images/6051/property-images/2026/8/69f4db35-c89c-4a22-91b4-3845ddc80d76_wm.jpeg",
-        "https://storage.googleapis.com/portales-prod-images/6051/property-images/2026/8/e10be9ea-67ff-4dc2-a1be-776a8d55d775_wm.jpeg",
+        "/properties/sie-229676/01-41b0accb6c9e.jpg",
+        "/properties/sie-229676/02-1b1fba30840c.jpg",
+        "/properties/sie-229676/03-b84f58b68906.jpg",
+        "/properties/sie-229676/04-8a9f3efb2315.jpg",
         "https://storage.googleapis.com/portales-prod-images/6051/property-images/2026/8/5e44df67-7b66-43e1-ba4f-a0ff0854928a_wm.jpeg",
         "https://storage.googleapis.com/portales-prod-images/6051/property-images/2026/8/ae4c821f-951f-44e7-9575-736df696a068_wm.jpeg"
       ],
@@ -113,10 +113,10 @@
       "bathrooms": null,
       "surface": "5512",
       "images": [
-        "https://storage.googleapis.com/portales-prod-images/6051/property-images/2026/8/668cc4e9-f4df-4589-8d31-a65d23ccef10_wm.jpeg",
-        "https://storage.googleapis.com/portales-prod-images/6051/property-images/2026/8/0192bc1a-5f0b-4a1d-bf4f-d68b75132f7d_wm.jpeg",
-        "https://storage.googleapis.com/portales-prod-images/6051/property-images/2026/8/2061bba6-f3f2-4b70-8b92-be85ce719bac_wm.jpeg",
-        "https://storage.googleapis.com/portales-prod-images/6051/property-images/2026/8/be8315dc-e3ce-497a-830a-0f604e83f897_wm.jpeg",
+        "/properties/sie-229431/01-5b813038942d.jpg",
+        "/properties/sie-229431/02-1409798063cc.jpg",
+        "/properties/sie-229431/03-73c3b909b55c.jpg",
+        "/properties/sie-229431/04-3ae67b73053f.jpg",
         "https://storage.googleapis.com/portales-prod-images/6051/property-images/2026/8/4e2d620c-6253-4693-92ef-c68ecafc417c_wm.jpeg",
         "https://storage.googleapis.com/portales-prod-images/6051/property-images/2026/8/1168af0d-3a15-4a75-a2f4-1f6c8f273d14_wm.jpeg"
       ],

@@ -31,6 +31,7 @@ export function EditorialProperty({
             src={image}
             alt={property.title}
             fill
+            quality={90}
             sizes="(max-width:768px) 100vw, 50vw"
             className="object-cover transition duration-700 group-hover:scale-[1.03]"
           />

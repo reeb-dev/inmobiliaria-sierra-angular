@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "publish:images": "node scripts/publish-images.mjs",
+    "publish:images:demo": "node scripts/publish-images.mjs --first=4 --limit=4"
   },
   "dependencies": {
     "class-variance-authority": "^0.7.1",
@@ -15,6 +17,7 @@
     "next": "16.3.5",
     "react": "19.2.8",
     "react-dom": "19.2.8",
+    "sharp": "^0.35.4",
     "tailwind-merge": "^3.7.0"
   },
   "devDependencies": {

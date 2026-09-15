@@ -12,10 +12,38 @@ Demo de un sitio inmobiliario más claro y usable, inspirado en la información 
 
 Los listados y textos institucionales se tomaron del sitio público original. Las fotos de propiedades se cargan desde el CDN del portal; el hero usa una imagen de Unsplash.
 
+## Fotos con mejora automática al publicar
+
+Cada vez que se publican propiedades, las fotos se procesan solas:
+
+```bash
+# Mejora todas (o las pendientes) y actualiza el catálogo
+npm run publish:images
+
+# Demo rápida (4 propiedades × 4 fotos)
+npm run publish:images:demo
+```
+
+También podés publicar por API:
+
+```bash
+curl -X POST http://127.0.0.1:43123/api/publish \
+  -H 'content-type: application/json' \
+  -d '{"property":{"id":"SIE-999","title":"Cabaña demo","images":["https://..."]}}'
+```
+
+El pipeline (Sharp):
+1. Prefiere el original sin watermark si existe
+2. Upscale a ~1600px si viene chica
+3. Normaliza contraste, satura levemente y afina nitidez
+4. Guarda JPEG mozjpeg en `public/properties/{id}/`
+5. Actualiza `src/data/listings.json` con las URLs locales
+
 ## Cómo correrlo
 
 ```bash
 npm install
+npm run publish:images:demo
 npm run dev -- --port 43123
 ```
 
@@ -23,4 +51,4 @@ Abrí [http://127.0.0.1:43123](http://127.0.0.1:43123).
 
 ## Stack
 
-Next.js (App Router), TypeScript, Tailwind CSS, Lucide.
+Next.js (App Router), TypeScript, Tailwind CSS, Lucide, Sharp.

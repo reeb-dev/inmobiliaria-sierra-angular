@@ -58,6 +58,7 @@ export function PropertyGallery({
             alt={`${title} — foto principal`}
             fill
             priority
+            quality={90}
             sizes="(max-width:768px) 100vw, 60vw"
             className="object-cover transition duration-500 hover:scale-[1.02]"
           />
