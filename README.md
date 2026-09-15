@@ -20,13 +20,26 @@ npm install
 npm start
 ```
 
-Abrí [http://localhost:43123](http://localhost:43123).
+## Preview en Cursor (importante)
 
-Solo servir un build ya hecho:
+El sitio corre en la **VM del Cloud Agent**. En tu Mac no hay nada en el 43123
+hasta que Cursor reenvíe el puerto.
+
+1. En la ventana del agente, arriba a la derecha, abrí el ícono de **enchufe** (Forwarded Ports).
+2. Buscá el puerto **43123** (Detected) y forwardealo si no está en Auto.
+3. Abrí **Open in internal browser**, o en Chrome usá exactamente el puerto local que muestre ese menú (a veces no es 43123 si ya estaba ocupado).
+
+URL esperada: [http://localhost:43123](http://localhost:43123)
+
+## Cómo correrlo local (en tu máquina)
 
 ```bash
+npm install
+npm run build
 npm run preview
 ```
+
+Abrí [http://localhost:43123](http://localhost:43123).
 
 Desarrollo con hot reload:
 
@@ -37,3 +50,4 @@ npm run dev
 ## Stack
 
 Angular 19 (standalone), TypeScript, SCSS. Fuentes locales (sin Google Fonts en runtime).
+

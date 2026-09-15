@@ -1,0 +1,12 @@
+{
+  "name": "sierra-angular",
+  "install": "npm install",
+  "start": "bash scripts/start-site.sh",
+  "ports": [43123],
+  "terminals": [
+    {
+      "name": "web",
+      "command": "bash scripts/start-site.sh"
+    }
+  ]
+}
