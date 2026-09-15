@@ -129,14 +129,14 @@ export default async function PropertyDetailPage({ params }: Props) {
                 href={`${agency.whatsapp}?text=${waText}`}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-forest text-sm text-mist"
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-md bg-forest text-sm font-semibold text-white hover:bg-forest-deep"
               >
                 <MessageCircle className="size-4" />
                 Consultar por WhatsApp
               </a>
               <a
                 href={agency.phoneHref}
-                className="inline-flex h-11 items-center justify-center gap-2 rounded-md border border-line bg-white/60 text-sm"
+                className="inline-flex h-11 items-center justify-center gap-2 rounded-md border-2 border-forest bg-white text-sm font-semibold text-forest hover:bg-mist"
               >
                 <Phone className="size-4" />
                 {agency.phone}
@@ -145,7 +145,7 @@ export default async function PropertyDetailPage({ params }: Props) {
                 href={property.sourceUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="inline-flex h-10 items-center justify-center gap-2 text-sm text-ink-soft hover:text-ink"
+                className="inline-flex h-10 items-center justify-center gap-2 text-sm font-medium text-forest underline-offset-4 hover:underline"
               >
                 Ver ficha original
                 <ExternalLink className="size-3.5" />

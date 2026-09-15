@@ -26,10 +26,10 @@ export function PropertyCard({ property }: { property: Property }) {
             </div>
           )}
           <div className="absolute left-3 top-3 flex gap-2">
-            <span className="rounded-md bg-forest-deep/90 px-2.5 py-1 text-[11px] uppercase tracking-wide text-mist">
+            <span className="rounded-md bg-forest-deep/90 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-white">
               {property.status === "alquiler" ? "Alquiler" : "Venta"}
             </span>
-            <span className="rounded-md bg-mist/90 px-2.5 py-1 text-[11px] uppercase tracking-wide text-forest-deep">
+            <span className="rounded-md bg-white/95 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wide text-forest-deep">
               {property.type}
             </span>
           </div>

@@ -72,7 +72,7 @@ export function LeadForm({
             href={agency.whatsapp}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex h-11 items-center rounded-md bg-forest px-5 text-sm text-mist"
+            className="inline-flex h-11 items-center rounded-md bg-forest px-5 text-sm font-semibold text-white hover:bg-forest-deep"
           >
             Abrir WhatsApp
           </a>

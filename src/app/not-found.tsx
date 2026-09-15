@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { btn } from "@/components/ui/button";
 
 export default function NotFound() {
   return (
@@ -8,17 +9,11 @@ export default function NotFound() {
       <p className="mt-3 text-ink-soft">
         Puede que el enlace haya cambiado. Volvé al catálogo o al inicio.
       </p>
-      <div className="mt-8 flex gap-3">
-        <Link
-          href="/"
-          className="inline-flex h-11 items-center rounded-md bg-forest px-5 text-sm text-mist"
-        >
+      <div className="mt-8 flex flex-wrap justify-center gap-3">
+        <Link href="/" className={btn.primarySm}>
           Inicio
         </Link>
-        <Link
-          href="/propiedades"
-          className="inline-flex h-11 items-center rounded-md border border-line bg-mist/80 px-5 text-sm"
-        >
+        <Link href="/propiedades" className={btn.secondary}>
           Propiedades
         </Link>
       </div>

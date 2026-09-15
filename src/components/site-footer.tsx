@@ -66,9 +66,9 @@ export function SiteFooter() {
           </ul>
         </div>
       </div>
-      <div className="border-t border-white/10 px-4 py-4 text-center text-xs text-mist/60 md:px-6">
-        Rediseño demo con información pública de {agency.name}. No es el sitio
-        oficial.
+      <div className="border-t border-white/10 px-4 py-4 text-center text-xs text-white/65 md:px-6">
+        Rediseño demo con información pública de {agency.name}. Paisajes de
+        Wikimedia Commons. No es el sitio oficial.
       </div>
     </footer>
   );
