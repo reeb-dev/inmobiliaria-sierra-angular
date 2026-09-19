@@ -246,19 +246,22 @@ const server = http.createServer(async (req, res) => {
 
       if (!st.mercadolibre) {
         return send(res, 200, {
-          needsAuth: true,
-          authUrl: null,
+          simulated: true,
           channel: 'mercadolibre',
           message:
-            'Configurá Client ID y Secret de ML en Ajustes y después Conectar.',
+            'Simulado: configurá ML_CLIENT_ID/SECRET en .env o Ajustes y conectá OAuth',
+          externalUrl: 'https://developers.mercadolibre.com.ar/',
         });
       }
       if (!tokens.get().ml?.access_token) {
         return send(res, 200, {
+          simulated: true,
           needsAuth: true,
           authUrl: '/api/ml/auth',
           channel: 'mercadolibre',
-          message: 'Tenés que iniciar sesión en Mercado Libre.',
+          message:
+            'Simulado: app ML configurada, falta iniciar sesión OAuth (/api/ml/auth)',
+          externalUrl: 'https://developers.mercadolibre.com.ar/',
         });
       }
 
@@ -309,11 +312,11 @@ const server = http.createServer(async (req, res) => {
       const c = cfg();
       if (!statusOf(c).argenprop) {
         return send(res, 200, {
-          needsAuth: true,
-          authUrl: null,
+          simulated: true,
           channel: 'argenprop',
           message:
-            'Cargá usuario/clave Argenprop en Ajustes (las da comercial) y guardá.',
+            'Simulado: pedí credenciales a Argenprop y cargalas en .env o Ajustes (ARGENPROP_*)',
+          externalUrl: 'https://gestion.argenprop.com/',
         });
       }
       const result = await argenpropPublish(c, property);
@@ -384,18 +387,22 @@ const server = http.createServer(async (req, res) => {
 
       if (!statusOf(c).instagram) {
         return send(res, 200, {
-          needsAuth: true,
-          authUrl: null,
+          simulated: true,
           channel: 'instagram',
-          message: 'Configurá App ID/Secret (o page token) en Ajustes.',
+          message:
+            'Simulado: configurá IG_* en .env o Ajustes y conectá OAuth o usá PAGE token',
+          externalUrl: 'https://developers.facebook.com/',
         });
       }
       if (!live) {
         return send(res, 200, {
+          simulated: true,
           needsAuth: true,
           authUrl: '/api/ig/auth',
           channel: 'instagram',
-          message: 'Tenés que iniciar sesión en Instagram / Meta.',
+          message:
+            'Simulado: app IG configurada, falta iniciar sesión OAuth (/api/ig/auth)',
+          externalUrl: 'https://developers.facebook.com/',
         });
       }
 

@@ -153,10 +153,13 @@ export class PublishService {
 
     let api = await this.postPublish(property, channel);
 
-    if (api.needsAuth && api.authUrl) {
+    // Si hay app configurada pero falta OAuth, intentar login; si sigue simulado, ok.
+    if (api.needsAuth && api.authUrl && !api.simulated) {
       await this.ensureConnected(channel);
       api = await this.postPublish(property, channel);
-    } else if (api.needsAuth) {
+    } else if (api.needsAuth && api.authUrl) {
+      // Modo demo con app parcial: no bloquea; deja simulated.
+    } else if (api.needsAuth && !api.simulated) {
       throw new Error(api.message);
     }
 
