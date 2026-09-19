@@ -1,10 +1,10 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { DatePipe } from '@angular/common';
 import { assetUrl } from '../core/asset-url';
 import { AiCopyService } from './ai-copy.service';
-import { PublishService } from './publish.service';
+import { PublishService, type ApiStatus } from './publish.service';
 import { PanelStoreService } from './panel-store.service';
 import type { PanelProperty, PublishChannel } from './panel.types';
 
@@ -24,95 +24,118 @@ import type { PanelProperty, PublishChannel } from './panel.types';
     </header>
 
     <div class="layout">
-      <form class="form" (ngSubmit)="save()">
-        <label>Título <input name="title" [(ngModel)]="form.title" required /></label>
-        <div class="row">
+      <div class="main">
+        <form class="block" (ngSubmit)="save()">
+          <h2>Datos</h2>
+          <label>Título <input name="title" [(ngModel)]="form.title" required maxlength="120" /></label>
+          <div class="row">
+            <label
+              >Tipo
+              <select name="type" [(ngModel)]="form.type">
+                @for (t of types; track t) {
+                  <option [value]="t">{{ t }}</option>
+                }
+              </select>
+            </label>
+            <label
+              >Operación
+              <select name="status" [(ngModel)]="form.status">
+                <option value="venta">Venta</option>
+                <option value="alquiler">Alquiler</option>
+              </select>
+            </label>
+          </div>
+          <div class="row">
+            <label>Precio <input name="price" [(ngModel)]="form.price" /></label>
+            <label>Ubicación <input name="location" [(ngModel)]="form.location" /></label>
+          </div>
+          <div class="row4">
+            <label
+              >Dorm.
+              <input name="bedrooms" type="number" min="0" [(ngModel)]="form.bedrooms" />
+            </label>
+            <label
+              >Baños
+              <input name="bathrooms" type="number" min="0" [(ngModel)]="form.bathrooms" />
+            </label>
+            <label>m² total <input name="surface" [(ngModel)]="form.surface" /></label>
+            <label
+              >m² cubiertos
+              <input name="coveredArea" [(ngModel)]="form.coveredArea" />
+            </label>
+          </div>
           <label
-            >Tipo
-            <select name="type" [(ngModel)]="form.type">
-              @for (t of types; track t) {
-                <option [value]="t">{{ t }}</option>
-              }
-            </select>
-          </label>
-          <label
-            >Operación
-            <select name="status" [(ngModel)]="form.status">
-              <option value="venta">Venta</option>
-              <option value="alquiler">Alquiler</option>
-            </select>
-          </label>
-        </div>
-        <div class="row">
-          <label>Precio <input name="price" [(ngModel)]="form.price" /></label>
-          <label>Ubicación <input name="location" [(ngModel)]="form.location" /></label>
-        </div>
-        <div class="row3">
-          <label
-            >Dorm.
+            >Cocheras
             <input
-              name="bedrooms"
+              name="parkingLots"
               type="number"
-              [(ngModel)]="form.bedrooms"
+              min="0"
+              [(ngModel)]="form.parkingLots"
+              placeholder="0"
             />
           </label>
           <label
-            >Baños
-            <input
-              name="bathrooms"
-              type="number"
-              [(ngModel)]="form.bathrooms"
-            />
+            >Descripción
+            <textarea name="description" rows="7" [(ngModel)]="form.description"></textarea>
           </label>
-          <label>m² <input name="surface" [(ngModel)]="form.surface" /></label>
-        </div>
-        <label
-          >Descripción
-          <textarea name="description" rows="7" [(ngModel)]="form.description"></textarea>
-        </label>
+          <button type="submit" class="primary">Guardar</button>
+          @if (savedMsg()) {
+            <p class="ok">{{ savedMsg() }}</p>
+          }
+        </form>
 
-        <div class="ai">
+        <section class="block">
+          <h2>Fotos</h2>
+          <label class="file-label"
+            >JPG / PNG / WebP (HEIC: convertir antes)
+            <input type="file" accept="image/*" multiple (change)="onFiles($event)" />
+          </label>
+          <div class="thumbs">
+            @for (img of form.images; track img; let i = $index) {
+              <div class="thumb">
+                <img [src]="preview(img)" alt="" />
+                <button type="button" (click)="removeImage(i)">Quitar</button>
+              </div>
+            } @empty {
+              <p class="muted">Sin fotos todavía.</p>
+            }
+          </div>
+        </section>
+
+        <section class="block">
+          <h2>IA</h2>
+          <p class="muted">Genera título y descripción a partir de los datos de la ficha.</p>
           <button type="button" class="secondary" [disabled]="busyAi()" (click)="generateAi()">
             {{ busyAi() ? 'Redactando…' : 'Generar texto con IA' }}
           </button>
           @if (aiNote()) {
-            <small>{{ aiNote() }}</small>
+            <p class="ok">{{ aiNote() }}</p>
           }
-        </div>
-
-        <label
-          >Fotos (JPG/PNG/WebP; HEIC conviene convertirlo antes)
-          <input type="file" accept="image/*" multiple (change)="onFiles($event)" />
-        </label>
-        <div class="thumbs">
-          @for (img of form.images; track img; let i = $index) {
-            <div class="thumb">
-              <img [src]="preview(img)" alt="" />
-              <button type="button" (click)="removeImage(i)">Quitar</button>
-            </div>
-          }
-        </div>
-
-        <button type="submit" class="primary">Guardar</button>
-        @if (savedMsg()) {
-          <p class="ok">{{ savedMsg() }}</p>
-        }
-      </form>
+        </section>
+      </div>
 
       <aside class="side">
-        <section>
-          <h2>Publicar / republicar</h2>
-          <p class="muted">Modo local simulado. No publica de verdad hasta conectar APIs.</p>
+        <section class="block">
+          <h2>Publicar</h2>
+          <p class="muted">
+            Requiere URLs públicas de fotos. Sin sesión, el panel simula o pide login.
+          </p>
           <div class="actions">
-            <button type="button" [disabled]="busyPub()" (click)="publish('mercadolibre')">
-              Mercado Libre
-            </button>
-            <button type="button" [disabled]="busyPub()" (click)="publish('instagram')">
-              Instagram
-            </button>
-            <button type="button" [disabled]="busyPub()" (click)="publish('argenprop')">
-              Argenprop
-            </button>
+            @for (ch of channels; track ch.id) {
+              <button
+                type="button"
+                class="pub"
+                [disabled]="busyPub()"
+                [attr.data-state]="channelState(ch.id)"
+                (click)="publish(ch.id)"
+              >
+                <span class="pub-label">
+                  <span class="dot" [attr.data-state]="channelState(ch.id)"></span>
+                  {{ ch.label }}
+                </span>
+                <small>{{ stateHint(ch.id) }}</small>
+              </button>
+            }
           </div>
           @if (pubMsg()) {
             <p class="ok">{{ pubMsg() }}</p>
@@ -122,8 +145,8 @@ import type { PanelProperty, PublishChannel } from './panel.types';
           }
         </section>
 
-        <section>
-          <h2>Estadísticas</h2>
+        <section class="block">
+          <h2>Stats</h2>
           <ul class="stats">
             <li><span>Web</span><strong>{{ stats().webViews }}</strong></li>
             <li><span>WhatsApp</span><strong>{{ stats().whatsappClicks }}</strong></li>
@@ -136,11 +159,11 @@ import type { PanelProperty, PublishChannel } from './panel.types';
           </button>
         </section>
 
-        <section>
+        <section class="block">
           <h2>Historial</h2>
           @for (p of pubs(); track p.id) {
             <article class="hist">
-              <strong>{{ p.channel }}</strong>
+              <strong>{{ channelLabel(p.channel) }}</strong>
               <span>{{ p.message }}</span>
               <small>{{ p.at | date: 'short' }}</small>
             </article>
@@ -157,10 +180,10 @@ import type { PanelProperty, PublishChannel } from './panel.types';
         display: flex;
         justify-content: space-between;
         gap: 1rem;
-        margin-bottom: 1.1rem;
+        margin-bottom: 1.15rem;
       }
       .back {
-        color: #5b6b62;
+        color: var(--ink-soft, #5b6b62);
         text-decoration: none;
         font-size: 0.9rem;
       }
@@ -168,10 +191,11 @@ import type { PanelProperty, PublishChannel } from './panel.types';
       h2 {
         margin: 0.35rem 0 0;
         font-family: var(--font-display, Georgia, serif);
-        color: #163528;
+        color: var(--forest-deep, #163528);
       }
       h2 {
-        font-size: 1.15rem;
+        font-size: 1.12rem;
+        margin: 0 0 0.75rem;
       }
       .layout {
         display: grid;
@@ -179,38 +203,46 @@ import type { PanelProperty, PublishChannel } from './panel.types';
       }
       @media (min-width: 980px) {
         .layout {
-          grid-template-columns: 1.4fr 0.9fr;
+          grid-template-columns: 1.45fr 0.9fr;
           align-items: start;
         }
       }
-      .form,
-      aside section {
-        background: #fff;
-        border: 1px solid #d5ddd7;
-        border-radius: 0.9rem;
-        padding: 1rem;
-      }
-      aside {
+      .main,
+      .side {
         display: grid;
         gap: 0.85rem;
+      }
+      .block {
+        background: #fff;
+        border: 1px solid var(--line, #d5ddd7);
+        border-radius: 0.9rem;
+        padding: 1.05rem 1.1rem;
       }
       label {
         display: grid;
         gap: 0.3rem;
         margin-bottom: 0.75rem;
         font-size: 0.86rem;
-        color: #163528;
+        color: var(--forest-deep, #163528);
+        font-weight: 600;
       }
       input,
       select,
       textarea {
-        border: 1px solid #d5ddd7;
+        border: 1px solid var(--line, #d5ddd7);
         border-radius: 0.5rem;
         padding: 0.65rem 0.75rem;
         font: inherit;
+        font-weight: 400;
+      }
+      input:focus,
+      select:focus,
+      textarea:focus {
+        outline: 2px solid rgba(47, 93, 69, 0.25);
+        border-color: var(--leaf, #3f7a58);
       }
       .row,
-      .row3 {
+      .row4 {
         display: grid;
         gap: 0.7rem;
       }
@@ -218,22 +250,17 @@ import type { PanelProperty, PublishChannel } from './panel.types';
         .row {
           grid-template-columns: 1fr 1fr;
         }
-        .row3 {
-          grid-template-columns: 1fr 1fr 1fr;
+        .row4 {
+          grid-template-columns: repeat(4, 1fr);
         }
       }
-      .ai {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 0.6rem;
-        align-items: center;
-        margin-bottom: 0.8rem;
+      .file-label input {
+        margin-top: 0.25rem;
       }
       .thumbs {
         display: flex;
         flex-wrap: wrap;
         gap: 0.55rem;
-        margin-bottom: 0.9rem;
       }
       .thumb {
         width: 6.2rem;
@@ -246,14 +273,15 @@ import type { PanelProperty, PublishChannel } from './panel.types';
         display: block;
       }
       .thumb button,
-      .actions button,
       .secondary,
       .primary,
-      .danger {
+      .danger,
+      .pub {
         border: 0;
         border-radius: 0.45rem;
         padding: 0.55rem 0.75rem;
         cursor: pointer;
+        font: inherit;
         font-weight: 700;
       }
       .thumb button {
@@ -262,13 +290,13 @@ import type { PanelProperty, PublishChannel } from './panel.types';
         background: #f3f6f3;
       }
       .primary {
-        background: #2f5d45;
+        background: var(--forest, #2f5d45);
         color: #fff;
         padding: 0.75rem 1rem;
       }
       .secondary {
         background: #e7eee8;
-        color: #163528;
+        color: var(--forest-deep, #163528);
       }
       .danger {
         background: #f8e8e8;
@@ -276,45 +304,89 @@ import type { PanelProperty, PublishChannel } from './panel.types';
       }
       .actions {
         display: grid;
-        gap: 0.45rem;
+        gap: 0.5rem;
       }
-      .actions button {
-        background: #163528;
+      .pub {
+        display: grid;
+        gap: 0.15rem;
+        background: var(--forest-deep, #163528);
         color: #fff;
         text-align: left;
+        padding: 0.7rem 0.85rem;
+      }
+      .pub[data-state='live'] {
+        background: var(--forest, #2f5d45);
+      }
+      .pub[data-state='needs_oauth'] {
+        background: #4a5d3a;
+      }
+      .pub[data-state='missing_credentials'] {
+        background: #5a6560;
+      }
+      .pub-label {
+        display: flex;
+        align-items: center;
+        gap: 0.45rem;
+      }
+      .dot {
+        width: 0.55rem;
+        height: 0.55rem;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.35);
+      }
+      .dot[data-state='live'] {
+        background: #8fd4a8;
+      }
+      .dot[data-state='needs_oauth'] {
+        background: #e8c86a;
+      }
+      .dot[data-state='missing_credentials'] {
+        background: #e0a0a0;
+      }
+      .pub small {
+        font-weight: 500;
+        opacity: 0.8;
+        font-size: 0.75rem;
       }
       .muted,
       small {
-        color: #5b6b62;
+        color: var(--ink-soft, #5b6b62);
         font-size: 0.86rem;
       }
       .ok {
-        color: #2f5d45;
+        color: var(--forest, #2f5d45);
+        margin: 0.5rem 0 0;
       }
       .err {
         color: #9b1c1c;
+        margin: 0.5rem 0 0;
       }
       .stats {
         list-style: none;
         padding: 0;
         margin: 0 0 0.8rem;
         display: grid;
-        gap: 0.35rem;
+        gap: 0.4rem;
       }
       .stats li {
         display: flex;
         justify-content: space-between;
+        padding: 0.35rem 0;
+        border-bottom: 1px solid #eef2ef;
+        font-size: 0.92rem;
       }
       .hist {
         display: grid;
         gap: 0.15rem;
-        margin-bottom: 0.65rem;
+        margin-bottom: 0.7rem;
         font-size: 0.88rem;
+        padding-bottom: 0.65rem;
+        border-bottom: 1px solid #eef2ef;
       }
     `,
   ],
 })
-export class PanelPropertyEditComponent {
+export class PanelPropertyEditComponent implements OnInit {
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
   private readonly store = inject(PanelStoreService);
@@ -322,6 +394,12 @@ export class PanelPropertyEditComponent {
   private readonly publishSvc = inject(PublishService);
 
   readonly types = ['Casa', 'Cabaña', 'Terreno', 'Departamento', 'Local', 'Campo', 'Casaquinta'];
+  readonly channels: { id: PublishChannel; label: string }[] = [
+    { id: 'mercadolibre', label: 'Mercado Libre' },
+    { id: 'instagram', label: 'Instagram' },
+    { id: 'argenprop', label: 'Argenprop' },
+  ];
+
   isNew = true;
   form: PanelProperty = this.blank();
   readonly busyAi = signal(false);
@@ -332,6 +410,7 @@ export class PanelPropertyEditComponent {
   readonly pubErr = signal('');
   readonly stats = signal(this.store.statsFor(''));
   readonly pubs = signal(this.store.publications());
+  readonly apiStatus = signal<ApiStatus | null>(null);
 
   constructor() {
     const id = this.route.snapshot.paramMap.get('id');
@@ -339,10 +418,41 @@ export class PanelPropertyEditComponent {
       const existing = this.store.get(id);
       if (existing) {
         this.isNew = false;
-        this.form = { ...existing };
+        this.form = {
+          ...existing,
+          coveredArea: existing.coveredArea ?? null,
+          parkingLots: existing.parkingLots ?? null,
+        };
         this.refreshSide();
       }
     }
+  }
+
+  ngOnInit() {
+    void this.publishSvc
+      .status()
+      .then((s) => this.apiStatus.set(s))
+      .catch(() => this.apiStatus.set(null));
+  }
+
+  channelState(id: PublishChannel): string {
+    const m = this.apiStatus()?.mode;
+    if (!m) return 'missing_credentials';
+    return m[id] || 'missing_credentials';
+  }
+
+  stateHint(id: PublishChannel) {
+    const s = this.channelState(id);
+    if (s === 'live') return 'Conectado';
+    if (s === 'needs_oauth') return 'Falta iniciar sesión';
+    return 'Faltan credenciales';
+  }
+
+  channelLabel(ch: string) {
+    if (ch === 'mercadolibre') return 'Mercado Libre';
+    if (ch === 'instagram') return 'Instagram';
+    if (ch === 'argenprop') return 'Argenprop';
+    return ch;
   }
 
   preview(src: string) {
@@ -408,6 +518,11 @@ export class PanelPropertyEditComponent {
       this.isNew = false;
       const pub = await this.publishSvc.republish(saved, channel);
       this.pubMsg.set(pub.message);
+      try {
+        this.apiStatus.set(await this.publishSvc.status());
+      } catch {
+        /* ignore */
+      }
       this.refreshSide();
     } catch (e) {
       this.pubErr.set(e instanceof Error ? e.message : 'Error al publicar');
@@ -443,6 +558,8 @@ export class PanelPropertyEditComponent {
       bedrooms: null,
       bathrooms: null,
       surface: null,
+      coveredArea: null,
+      parkingLots: 0,
       images: [],
       description: '',
       published: false,

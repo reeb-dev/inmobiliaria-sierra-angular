@@ -67,6 +67,17 @@ export function config() {
         pick(cred, 'ML_REDIRECT_URI', 'ml.redirectUri') ||
         'http://127.0.0.1:43125/api/ml/callback',
       siteId: pick(cred, 'ML_SITE_ID', 'ml.siteId') || 'MLA',
+      // seller_contact (WhatsApp obligatorio en inmuebles desde 01/10/2026)
+      contact: {
+        contact: pick(cred, 'ML_CONTACT_NAME', 'ml.contact.contact'),
+        email: pick(cred, 'ML_CONTACT_EMAIL', 'ml.contact.email'),
+        phone: pick(cred, 'ML_CONTACT_PHONE', 'ml.contact.phone'),
+        whatsapp: pick(cred, 'ML_CONTACT_WHATSAPP', 'ml.contact.whatsapp'),
+        areaCode: pick(cred, 'ML_CONTACT_AREA_CODE', 'ml.contact.areaCode'),
+        phoneLocal: pick(cred, 'ML_CONTACT_PHONE_LOCAL', 'ml.contact.phoneLocal'),
+        otherInfo: pick(cred, 'ML_CONTACT_OTHER', 'ml.contact.otherInfo'),
+        webpage: pick(cred, 'ML_CONTACT_WEBPAGE', 'ml.contact.webpage'),
+      },
     },
     argenprop: {
       baseUrl:

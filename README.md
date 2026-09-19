@@ -58,6 +58,8 @@ También sirve `.env` (ver `.env.example`). Tokens en `server/.data/` (gitignore
 | Instagram/Meta | developers.facebook.com | `http://127.0.0.1:43125/api/ig/callback` |
 | Argenprop | comercial / partner | login por usr/psd (sin OAuth web) |
 
+ML envía `seller_contact` (WhatsApp `country_code2`/`phone2`) desde `ML_CONTACT_*` o `agency` en `listings.json`. Instagram usa Facebook Login; el publish espera `status_code=FINISHED` del contenedor antes de `media_publish`.
+
 Estado: `GET /api/status` · salud: `GET /api/health`.
 
 ## Deploy

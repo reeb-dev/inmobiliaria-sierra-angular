@@ -11,6 +11,10 @@ export type PanelProperty = {
   bedrooms: number | null;
   bathrooms: number | null;
   surface: string | null;
+  /** Superficie cubierta (m²) — COVERED_AREA en ML / Argenprop */
+  coveredArea?: string | null;
+  /** Cocheras — PARKING_LOTS en ML (0 si no hay) */
+  parkingLots?: number | null;
   images: string[];
   description: string;
   published?: boolean;

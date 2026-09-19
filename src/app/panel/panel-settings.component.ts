@@ -12,47 +12,52 @@ import type { ApiStatus } from './publish.service';
   template: `
     <header class="head">
       <p class="eyebrow">Configuración</p>
-      <h1>Login APIs + IA</h1>
+      <h1>Canales y IA</h1>
+      <p class="lead">Credenciales, login OAuth y proveedor de textos automáticos.</p>
     </header>
 
-    <section class="card">
-      <h2>Estado</h2>
+    <section class="card status-card">
+      <h2>Estado de canales</h2>
       @if (apiErr()) {
         <p class="err">{{ apiErr() }}</p>
       } @else if (apiStatus()) {
         <ul class="status">
           <li>
             <strong>Mercado Libre</strong>
-            <span [class.live]="apiStatus()!.mode.mercadolibre === 'live'">{{
-              apiStatus()!.mode.mercadolibre
-            }}</span>
-          </li>
-          <li>
-            <strong>Argenprop</strong>
-            <span [class.live]="apiStatus()!.mode.argenprop === 'live'">{{
-              apiStatus()!.mode.argenprop
+            <span class="badge" [attr.data-mode]="apiStatus()!.mode.mercadolibre">{{
+              modeLabel(apiStatus()!.mode.mercadolibre)
             }}</span>
           </li>
           <li>
             <strong>Instagram</strong>
-            <span [class.live]="apiStatus()!.mode.instagram === 'live'">{{
-              apiStatus()!.mode.instagram
+            <span class="badge" [attr.data-mode]="apiStatus()!.mode.instagram">{{
+              modeLabel(apiStatus()!.mode.instagram)
+            }}</span>
+          </li>
+          <li>
+            <strong>Argenprop</strong>
+            <span class="badge" [attr.data-mode]="apiStatus()!.mode.argenprop">{{
+              modeLabel(apiStatus()!.mode.argenprop)
             }}</span>
           </li>
         </ul>
       }
-      <button type="button" class="secondary" (click)="refreshApi()">Actualizar</button>
+      <button type="button" class="secondary" (click)="refreshApi()">Actualizar estado</button>
       @if (connMsg()) {
         <p class="ok">{{ connMsg() }}</p>
       }
     </section>
 
-    <section class="card">
-      <h2>Mercado Libre — login automático</h2>
+    <section class="card channel ml">
+      <div class="ch-head">
+        <h2>Mercado Libre</h2>
+        <span class="badge" [attr.data-mode]="apiStatus()?.mode?.mercadolibre || 'missing_credentials'">{{
+          modeLabel(apiStatus()?.mode?.mercadolibre || 'missing_credentials')
+        }}</span>
+      </div>
       <p class="muted">
-        1) Creá una app en developers.mercadolibre.com.ar · 2) Redirect URI:
-        <code>http://127.0.0.1:43125/api/ml/callback</code> · 3) Guardá y Conectar
-        (abre login de ML y vuelve solo).
+        App en developers.mercadolibre.com.ar. Redirect:
+        <code>http://127.0.0.1:43125/api/ml/callback</code>
       </p>
       <label>Client ID <input [(ngModel)]="ml.clientId" name="mlId" /></label>
       <label
@@ -60,19 +65,26 @@ import type { ApiStatus } from './publish.service';
         <input type="password" [(ngModel)]="ml.clientSecret" name="mlSecret" placeholder="••••"
       /></label>
       <div class="row">
-        <button type="button" (click)="saveMl()">Guardar app ML</button>
-        <button type="button" class="secondary" [disabled]="busy()" (click)="connectMl()">
-          {{ busy() === 'ml' ? 'Conectando…' : 'Iniciar sesión ML' }}
+        <button type="button" class="secondary" (click)="saveMl()">Guardar app</button>
+        <button type="button" class="cta" [disabled]="busy()" (click)="connectMl()">
+          {{ busy() === 'ml' ? 'Conectando…' : 'Iniciar sesión' }}
         </button>
       </div>
     </section>
 
-    <section class="card">
-      <h2>Instagram / Meta — login automático</h2>
+    <section class="card channel ig">
+      <div class="ch-head">
+        <h2>Instagram / Meta</h2>
+        <span class="badge" [attr.data-mode]="apiStatus()?.mode?.instagram || 'missing_credentials'">{{
+          modeLabel(apiStatus()?.mode?.instagram || 'missing_credentials')
+        }}</span>
+      </div>
       <p class="muted">
-        Redirect:
-        <code>http://127.0.0.1:43125/api/ig/callback</code>. Cuenta Professional +
-        página de Facebook.
+        Facebook Login + cuenta Professional. Redirect:
+        <code>http://127.0.0.1:43125/api/ig/callback</code>. Scopes actuales:
+        <code>instagram_basic</code>, <code>instagram_content_publish</code>. Alternativa Meta:
+        <code>instagram_business_basic</code> /
+        <code>instagram_business_content_publish</code>.
       </p>
       <label>App ID <input [(ngModel)]="ig.appId" name="igId" /></label>
       <label
@@ -89,18 +101,22 @@ import type { ApiStatus } from './publish.service';
           placeholder="••••"
       /></label>
       <div class="row">
-        <button type="button" (click)="saveIg()">Guardar app IG</button>
-        <button type="button" class="secondary" [disabled]="busy()" (click)="connectIg()">
-          {{ busy() === 'ig' ? 'Conectando…' : 'Iniciar sesión Instagram' }}
+        <button type="button" class="secondary" (click)="saveIg()">Guardar app</button>
+        <button type="button" class="cta" [disabled]="busy()" (click)="connectIg()">
+          {{ busy() === 'ig' ? 'Conectando…' : 'Iniciar sesión' }}
         </button>
       </div>
     </section>
 
-    <section class="card">
-      <h2>Argenprop — login con credenciales</h2>
+    <section class="card channel ap">
+      <div class="ch-head">
+        <h2>Argenprop</h2>
+        <span class="badge" [attr.data-mode]="apiStatus()?.mode?.argenprop || 'missing_credentials'">{{
+          modeLabel(apiStatus()?.mode?.argenprop || 'missing_credentials')
+        }}</span>
+      </div>
       <p class="muted">
-        No usa OAuth web: comercial te da usr/psd/Ids. Los guardás acá y quedan
-        listos para publicar.
+        Sin OAuth web: comercial te da usr / psd / Ids. Guardalos y quedan listos para publicar.
       </p>
       <label>Usuario <input [(ngModel)]="ap.usr" name="apUsr" /></label>
       <label
@@ -112,7 +128,7 @@ import type { ApiStatus } from './publish.service';
         >Sistema Origen Id
         <input [(ngModel)]="ap.sistemaOrigenId" name="apSys"
       /></label>
-      <button type="button" [disabled]="busy()" (click)="loginAp()">
+      <button type="button" class="cta" [disabled]="busy()" (click)="loginAp()">
         {{ busy() === 'ap' ? 'Guardando…' : 'Guardar login Argenprop' }}
       </button>
     </section>
@@ -143,65 +159,96 @@ import type { ApiStatus } from './publish.service';
 
     <section class="card">
       <h2>Datos del panel</h2>
+      <p class="muted">Restaura el inventario de ejemplo desde listings.json.</p>
       <button type="button" class="danger" (click)="reset()">Restaurar ejemplo</button>
     </section>
   `,
   styles: [
     `
       .head {
-        margin-bottom: 1rem;
+        margin-bottom: 1.15rem;
       }
       .eyebrow {
         margin: 0;
         letter-spacing: 0.16em;
         text-transform: uppercase;
         font-size: 0.7rem;
-        color: #3f7a58;
+        color: var(--leaf, #3f7a58);
+        font-weight: 700;
       }
       h1,
       h2 {
         margin: 0.35rem 0 0.5rem;
         font-family: var(--font-display, Georgia, serif);
-        color: #163528;
+        color: var(--forest-deep, #163528);
+      }
+      .lead {
+        margin: 0.35rem 0 0;
+        color: var(--ink-soft, #5b6b62);
+        font-size: 0.95rem;
       }
       h2 {
         font-size: 1.15rem;
+        margin: 0;
       }
       .card {
         background: #fff;
-        border: 1px solid #d5ddd7;
+        border: 1px solid var(--line, #d5ddd7);
         border-radius: 0.9rem;
-        padding: 1rem;
+        padding: 1.1rem 1.15rem;
         margin-bottom: 0.9rem;
         display: grid;
         gap: 0.7rem;
-        max-width: 42rem;
+        max-width: 44rem;
+      }
+      .channel {
+        border-left: 3px solid var(--forest, #2f5d45);
+      }
+      .channel.ig {
+        border-left-color: #3d5a4a;
+      }
+      .channel.ap {
+        border-left-color: #6b7d5a;
+      }
+      .ch-head {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 0.75rem;
       }
       label {
         display: grid;
         gap: 0.3rem;
         font-size: 0.88rem;
+        font-weight: 600;
       }
       input,
       select {
-        border: 1px solid #d5ddd7;
+        border: 1px solid var(--line, #d5ddd7);
         border-radius: 0.5rem;
         padding: 0.65rem 0.75rem;
         font: inherit;
+        font-weight: 400;
       }
       button {
         border: 0;
         border-radius: 0.5rem;
-        background: #2f5d45;
+        background: var(--forest, #2f5d45);
         color: #fff;
+        font: inherit;
         font-weight: 700;
         padding: 0.7rem 1rem;
         cursor: pointer;
         width: fit-content;
       }
+      .cta {
+        background: var(--forest-deep, #163528);
+        padding: 0.75rem 1.15rem;
+        font-size: 0.95rem;
+      }
       .secondary {
         background: #e7eee8;
-        color: #163528;
+        color: var(--forest-deep, #163528);
       }
       .danger {
         background: #f8e8e8;
@@ -214,13 +261,13 @@ import type { ApiStatus } from './publish.service';
       }
       .muted {
         margin: 0;
-        color: #5b6b62;
+        color: var(--ink-soft, #5b6b62);
         font-size: 0.9rem;
         line-height: 1.45;
       }
       .ok {
         margin: 0;
-        color: #2f5d45;
+        color: var(--forest, #2f5d45);
       }
       .err {
         margin: 0;
@@ -231,22 +278,43 @@ import type { ApiStatus } from './publish.service';
         padding: 0;
         margin: 0;
         display: grid;
-        gap: 0.45rem;
+        gap: 0.55rem;
       }
       .status li {
         display: flex;
         justify-content: space-between;
+        align-items: center;
         gap: 1rem;
+        padding: 0.45rem 0;
+        border-bottom: 1px solid #eef2ef;
       }
-      .live {
-        color: #2f5d45;
+      .badge {
+        display: inline-block;
+        font-size: 0.68rem;
         font-weight: 700;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        padding: 0.2rem 0.5rem;
+        border-radius: 0.3rem;
+        white-space: nowrap;
+      }
+      .badge[data-mode='live'] {
+        background: #dceee3;
+        color: #1a5c38;
+      }
+      .badge[data-mode='needs_oauth'] {
+        background: #f5ecd4;
+        color: #7a5a12;
+      }
+      .badge[data-mode='missing_credentials'] {
+        background: #f0e4e4;
+        color: #8a2e2e;
       }
       code {
         background: #f3f6f3;
         padding: 0.1rem 0.3rem;
         border-radius: 0.25rem;
-        font-size: 0.8rem;
+        font-size: 0.78rem;
       }
     `,
   ],
@@ -275,6 +343,12 @@ export class PanelSettingsComponent implements OnInit {
   ngOnInit() {
     void this.refreshApi();
     void this.loadCreds();
+  }
+
+  modeLabel(mode: string) {
+    if (mode === 'live') return 'Conectado';
+    if (mode === 'needs_oauth') return 'Falta login';
+    return 'Sin keys';
   }
 
   async refreshApi() {

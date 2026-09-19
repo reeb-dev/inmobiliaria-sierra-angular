@@ -1,28 +1,40 @@
 /**
  * Instagram Graph API (cuenta Professional + Página de Facebook).
- * Flujo: crear contenedor de media → publicar.
+ * Flujo: crear contenedor de media → esperar FINISHED → media_publish.
+ *
+ * Auth actual: Facebook Login (dialog/oauth) con scopes clásicos.
+ * Alternativa Meta (Instagram API Login): scopes
+ *   instagram_business_basic, instagram_business_content_publish
+ *   vía https://www.instagram.com/oauth/authorize — requiere app configurada
+ *   para Instagram Login; no se cambia acá para no romper integraciones existentes.
  */
+
+const GRAPH = 'https://graph.facebook.com/v21.0';
+
+/** Scopes Facebook Login (compatibles con Page + IG Professional). */
+const FB_LOGIN_SCOPES = [
+  'instagram_basic',
+  'instagram_content_publish',
+  'pages_show_list',
+  'pages_read_engagement',
+  'business_management',
+].join(',');
+
+/** Scopes Instagram API Login (documentados; no usados en el flujo actual). */
+export const IG_BUSINESS_SCOPES =
+  'instagram_business_basic,instagram_business_content_publish';
 
 export function igAuthUrl(cfg) {
   const u = new URL('https://www.facebook.com/v21.0/dialog/oauth');
   u.searchParams.set('client_id', cfg.ig.appId);
   u.searchParams.set('redirect_uri', cfg.ig.redirectUri);
-  u.searchParams.set(
-    'scope',
-    [
-      'instagram_basic',
-      'instagram_content_publish',
-      'pages_show_list',
-      'pages_read_engagement',
-      'business_management',
-    ].join(','),
-  );
+  u.searchParams.set('scope', FB_LOGIN_SCOPES);
   u.searchParams.set('response_type', 'code');
   return u.toString();
 }
 
 export async function igExchangeCode(cfg, code) {
-  const u = new URL('https://graph.facebook.com/v21.0/oauth/access_token');
+  const u = new URL(`${GRAPH}/oauth/access_token`);
   u.searchParams.set('client_id', cfg.ig.appId);
   u.searchParams.set('client_secret', cfg.ig.appSecret);
   u.searchParams.set('redirect_uri', cfg.ig.redirectUri);
@@ -33,7 +45,7 @@ export async function igExchangeCode(cfg, code) {
     throw new Error(data.error?.message || `IG token HTTP ${res.status}`);
   }
   // Long-lived
-  const longUrl = new URL('https://graph.facebook.com/v21.0/oauth/access_token');
+  const longUrl = new URL(`${GRAPH}/oauth/access_token`);
   longUrl.searchParams.set('grant_type', 'fb_exchange_token');
   longUrl.searchParams.set('client_id', cfg.ig.appId);
   longUrl.searchParams.set('client_secret', cfg.ig.appSecret);
@@ -53,6 +65,40 @@ function firstPublicImage(property, publicWeb) {
     return `${publicWeb.replace(/\/$/, '')}/${img.replace(/^\//, '')}`;
   }
   return null;
+}
+
+function sleep(ms) {
+  return new Promise((r) => setTimeout(r, ms));
+}
+
+/**
+ * Espera status_code FINISHED del contenedor antes de media_publish.
+ * Timeout corto (~12s) para no alargar el request del panel.
+ */
+async function waitContainerReady(containerId, token, { timeoutMs = 12_000, intervalMs = 800 } = {}) {
+  const deadline = Date.now() + timeoutMs;
+  let last = null;
+  while (Date.now() < deadline) {
+    const u = new URL(`${GRAPH}/${containerId}`);
+    u.searchParams.set('fields', 'status_code,status');
+    u.searchParams.set('access_token', token);
+    const res = await fetch(u);
+    const data = await res.json();
+    last = data;
+    if (!res.ok || data.error) {
+      // Si el status endpoint falla, no bloqueamos: se intenta publish igual.
+      break;
+    }
+    const code = String(data.status_code || '').toUpperCase();
+    if (code === 'FINISHED') return data;
+    if (code === 'ERROR' || code === 'EXPIRED') {
+      throw new Error(
+        data.status || `Contenedor Instagram en estado ${code}`,
+      );
+    }
+    await sleep(intervalMs);
+  }
+  return last;
 }
 
 export async function igPublish(cfg, tokens, property) {
@@ -84,7 +130,7 @@ export async function igPublish(cfg, tokens, property) {
     .filter(Boolean)
     .join('\n');
 
-  const createUrl = new URL(`https://graph.facebook.com/v21.0/${igUserId}/media`);
+  const createUrl = new URL(`${GRAPH}/${igUserId}/media`);
   createUrl.searchParams.set('image_url', imageUrl);
   createUrl.searchParams.set('caption', caption);
   createUrl.searchParams.set('access_token', token);
@@ -97,9 +143,16 @@ export async function igPublish(cfg, tokens, property) {
     );
   }
 
-  const pubUrl = new URL(
-    `https://graph.facebook.com/v21.0/${igUserId}/media_publish`,
-  );
+  // Poll suave: si no llega a FINISHED a tiempo, igual intentamos publish.
+  try {
+    await waitContainerReady(createData.id, token);
+  } catch (e) {
+    throw new Error(
+      e instanceof Error ? e.message : 'Instagram: contenedor de media falló',
+    );
+  }
+
+  const pubUrl = new URL(`${GRAPH}/${igUserId}/media_publish`);
   pubUrl.searchParams.set('creation_id', createData.id);
   pubUrl.searchParams.set('access_token', token);
   const pubRes = await fetch(pubUrl, { method: 'POST' });
@@ -118,7 +171,7 @@ export async function igPublish(cfg, tokens, property) {
 }
 
 export async function igMediaInsights(token, mediaId) {
-  const u = new URL(`https://graph.facebook.com/v21.0/${mediaId}/insights`);
+  const u = new URL(`${GRAPH}/${mediaId}/insights`);
   u.searchParams.set('metric', 'impressions,reach,saved');
   u.searchParams.set('access_token', token);
   const res = await fetch(u);
