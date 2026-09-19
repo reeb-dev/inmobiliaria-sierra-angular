@@ -40,23 +40,25 @@ npm start         # build + static en :4200
 
 Los datos del panel viven en el navegador (`localStorage`). Las publicaciones pasan por la API local (`server/`).
 
-### Credenciales reales (`.env`)
+### Credenciales y login automático
 
-Copiá `.env.example` → `.env` y completá solo lo que uses. Sin keys, `POST /api/*/publish` responde `simulated: true` (seguro para demos).
+En el panel → **Ajustes IA** podés pegar las keys y conectar:
 
-| Canal | Variables | OAuth / conexión |
-|-------|-----------|------------------|
-| Mercado Libre | `ML_CLIENT_ID`, `ML_CLIENT_SECRET`, `ML_REDIRECT_URI` | http://127.0.0.1:43125/api/ml/auth (también link en Panel → Ajustes) |
-| Instagram / Meta | `IG_APP_ID`, `IG_APP_SECRET`, `IG_USER_ID` o `IG_PAGE_ACCESS_TOKEN` | http://127.0.0.1:43125/api/ig/auth |
-| Argenprop | `ARGENPROP_USR`, `ARGENPROP_PSD`, `ARGENPROP_ID_VENDEDOR`, `ARGENPROP_ID_ORIGEN` | credenciales partner (sin OAuth en el panel) |
+1. **Mercado Libre** → Guardar app → **Iniciar sesión ML** (popup OAuth, vuelve solo)
+2. **Instagram** → Guardar app → **Iniciar sesión Instagram**
+3. **Argenprop** → usr/psd/Ids → **Guardar login Argenprop**
 
-Tokens OAuth se guardan en `server/.data/` (ignorado por git). Estado: `GET /api/status` · salud: `GET /api/health`.
+Si publicás sin sesión, el panel abre el login OAuth solo y reintenta.
 
-Apps:
+También sirve `.env` (ver `.env.example`). Tokens en `server/.data/` (gitignored).
 
-- ML: https://developers.mercadolibre.com.ar/
-- Instagram/Meta: https://developers.facebook.com/
-- Argenprop: pedir acceso a comercial / partner
+| Canal | Dónde sacar keys | Redirect URI local |
+|-------|------------------|--------------------|
+| Mercado Libre | developers.mercadolibre.com.ar | `http://127.0.0.1:43125/api/ml/callback` |
+| Instagram/Meta | developers.facebook.com | `http://127.0.0.1:43125/api/ig/callback` |
+| Argenprop | comercial / partner | login por usr/psd (sin OAuth web) |
+
+Estado: `GET /api/status` · salud: `GET /api/health`.
 
 ## Deploy
 

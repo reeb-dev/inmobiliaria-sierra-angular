@@ -6,6 +6,8 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const serverRoot = path.resolve(__dirname, '..');
 const projectRoot = path.resolve(serverRoot, '..');
 const envPath = path.join(projectRoot, '.env');
+const dataDir = path.join(serverRoot, '.data');
+const credFile = path.join(dataDir, 'credentials.json');
 
 /** Carga .env simple (KEY=VALUE) sin dependencias. */
 export function loadEnv() {
@@ -27,39 +29,66 @@ export function loadEnv() {
   }
 }
 
+export function readCredentials() {
+  try {
+    if (!fs.existsSync(credFile)) return {};
+    return JSON.parse(fs.readFileSync(credFile, 'utf8'));
+  } catch {
+    return {};
+  }
+}
+
+export function writeCredentials(patch) {
+  fs.mkdirSync(dataDir, { recursive: true });
+  const next = { ...readCredentials(), ...patch };
+  fs.writeFileSync(credFile, JSON.stringify(next, null, 2));
+  return next;
+}
+
+function pick(cred, envKey, credPath) {
+  const fromCred = credPath
+    .split('.')
+    .reduce((o, k) => (o == null ? o : o[k]), cred);
+  if (fromCred) return String(fromCred);
+  return process.env[envKey] || '';
+}
+
 export function config() {
   loadEnv();
+  const cred = readCredentials();
   return {
     port: Number(process.env.API_PORT || 43125),
     publicWeb: process.env.PUBLIC_WEB_URL || 'http://127.0.0.1:43124',
-    dataDir: path.join(serverRoot, '.data'),
+    dataDir,
     ml: {
-      clientId: process.env.ML_CLIENT_ID || '',
-      clientSecret: process.env.ML_CLIENT_SECRET || '',
+      clientId: pick(cred, 'ML_CLIENT_ID', 'ml.clientId'),
+      clientSecret: pick(cred, 'ML_CLIENT_SECRET', 'ml.clientSecret'),
       redirectUri:
-        process.env.ML_REDIRECT_URI ||
+        pick(cred, 'ML_REDIRECT_URI', 'ml.redirectUri') ||
         'http://127.0.0.1:43125/api/ml/callback',
-      siteId: process.env.ML_SITE_ID || 'MLA',
-      listingType: process.env.ML_LISTING_TYPE || 'free',
+      siteId: pick(cred, 'ML_SITE_ID', 'ml.siteId') || 'MLA',
     },
     argenprop: {
       baseUrl:
-        process.env.ARGENPROP_API_BASE ||
+        pick(cred, 'ARGENPROP_API_BASE', 'argenprop.baseUrl') ||
         'https://apiw.argenprop.com',
-      usr: process.env.ARGENPROP_USR || '',
-      psd: process.env.ARGENPROP_PSD || '',
-      idVendedor: process.env.ARGENPROP_ID_VENDEDOR || '',
-      idOrigen: process.env.ARGENPROP_ID_ORIGEN || '',
-      sistemaOrigenId: Number(process.env.ARGENPROP_SISTEMA_ORIGEN_ID || '0'),
+      usr: pick(cred, 'ARGENPROP_USR', 'argenprop.usr'),
+      psd: pick(cred, 'ARGENPROP_PSD', 'argenprop.psd'),
+      idVendedor: pick(cred, 'ARGENPROP_ID_VENDEDOR', 'argenprop.idVendedor'),
+      idOrigen: pick(cred, 'ARGENPROP_ID_ORIGEN', 'argenprop.idOrigen'),
+      sistemaOrigenId: Number(
+        pick(cred, 'ARGENPROP_SISTEMA_ORIGEN_ID', 'argenprop.sistemaOrigenId') ||
+          '0',
+      ),
     },
     ig: {
-      appId: process.env.IG_APP_ID || '',
-      appSecret: process.env.IG_APP_SECRET || '',
+      appId: pick(cred, 'IG_APP_ID', 'ig.appId'),
+      appSecret: pick(cred, 'IG_APP_SECRET', 'ig.appSecret'),
       redirectUri:
-        process.env.IG_REDIRECT_URI ||
+        pick(cred, 'IG_REDIRECT_URI', 'ig.redirectUri') ||
         'http://127.0.0.1:43125/api/ig/callback',
-      igUserId: process.env.IG_USER_ID || '',
-      pageAccessToken: process.env.IG_PAGE_ACCESS_TOKEN || '',
+      igUserId: pick(cred, 'IG_USER_ID', 'ig.igUserId'),
+      pageAccessToken: pick(cred, 'IG_PAGE_ACCESS_TOKEN', 'ig.pageAccessToken'),
     },
   };
 }
@@ -77,5 +106,31 @@ export function statusOf(cfg) {
       (cfg.ig.appId && cfg.ig.appSecret) ||
         (cfg.ig.pageAccessToken && cfg.ig.igUserId),
     ),
+  };
+}
+
+export function maskCredentials() {
+  const c = readCredentials();
+  const mask = (v) => (v ? `${String(v).slice(0, 3)}…` : '');
+  return {
+    ml: {
+      clientId: c.ml?.clientId || '',
+      clientSecretSet: Boolean(c.ml?.clientSecret),
+      clientSecretMask: mask(c.ml?.clientSecret),
+    },
+    ig: {
+      appId: c.ig?.appId || '',
+      appSecretSet: Boolean(c.ig?.appSecret),
+      igUserId: c.ig?.igUserId || '',
+      pageAccessTokenSet: Boolean(c.ig?.pageAccessToken),
+    },
+    argenprop: {
+      baseUrl: c.argenprop?.baseUrl || '',
+      usr: c.argenprop?.usr || '',
+      psdSet: Boolean(c.argenprop?.psd),
+      idVendedor: c.argenprop?.idVendedor || '',
+      idOrigen: c.argenprop?.idOrigen || '',
+      sistemaOrigenId: c.argenprop?.sistemaOrigenId || '',
+    },
   };
 }
