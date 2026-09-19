@@ -1,25 +1,30 @@
 import { Injectable, inject } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 import type { PanelProperty, PublishChannel } from './panel.types';
 import { PanelStoreService } from './panel-store.service';
+
+type PublishApiResponse = {
+  simulated?: boolean;
+  channel: PublishChannel;
+  message: string;
+  externalUrl?: string;
+  remoteId?: string;
+  error?: string;
+};
 
 @Injectable({ providedIn: 'root' })
 export class PublishService {
   private readonly store = inject(PanelStoreService);
+  private readonly http = inject(HttpClient);
+
+  private endpoint(channel: PublishChannel) {
+    if (channel === 'mercadolibre') return '/api/ml/publish';
+    if (channel === 'instagram') return '/api/ig/publish';
+    return '/api/argenprop/publish';
+  }
 
   async publish(property: PanelProperty, channel: PublishChannel) {
-    // Modo local: no llama APIs reales; deja auditoría en el panel.
-    await delay(450);
-    const labels: Record<PublishChannel, string> = {
-      mercadolibre: 'Mercado Libre',
-      instagram: 'Instagram',
-      argenprop: 'Argenprop',
-    };
-    const urls: Record<PublishChannel, string> = {
-      mercadolibre: `https://www.mercadolibre.com.ar/publicaciones?q=${encodeURIComponent(property.id)}`,
-      instagram: 'https://www.instagram.com/',
-      argenprop: 'https://www.argenprop.com/',
-    };
-
     if (!property.title || !property.price || !property.location) {
       throw new Error('Faltan título, precio o ubicación');
     }
@@ -27,29 +32,47 @@ export class PublishService {
       throw new Error('Agregá al menos una foto antes de publicar');
     }
 
-    const message = `Simulado en local → ${labels[channel]}: “${property.title}” (${property.price}). Conectá OAuth/API keys para publicar de verdad.`;
+    let api: PublishApiResponse;
+    try {
+      api = await firstValueFrom(
+        this.http.post<PublishApiResponse>(this.endpoint(channel), { property }),
+      );
+    } catch (e: unknown) {
+      const msg =
+        (e as { error?: { error?: string }; message?: string })?.error?.error ||
+        (e as { message?: string })?.message ||
+        'No se pudo hablar con la API local (:43125). ¿Corriste npm run dev:all?';
+      throw new Error(msg);
+    }
+
+    if (api.error) throw new Error(api.error);
+
     const pub = this.store.addPublication(
       property.id,
       channel,
-      message,
-      urls[channel],
+      api.message,
+      api.externalUrl,
+      api.simulated ? 'simulated' : 'published',
+      api.remoteId,
     );
 
     if (channel === 'mercadolibre') this.store.bumpStat(property.id, 'mlViews', 5);
     if (channel === 'instagram') this.store.bumpStat(property.id, 'igReach', 25);
-    this.store.bumpStat(property.id, 'contacts', 0);
 
     return pub;
   }
 
   async republish(property: PanelProperty, channel: PublishChannel) {
-    await delay(350);
-    const pub = await this.publish(property, channel);
-    pub.message = `Republicación simulada en ${channel}: ${property.title}`;
-    return pub;
+    return this.publish(property, channel);
   }
-}
 
-function delay(ms: number) {
-  return new Promise((r) => setTimeout(r, ms));
+  status() {
+    return firstValueFrom(
+      this.http.get<{
+        configured: Record<string, boolean>;
+        connected: Record<string, boolean>;
+        mode: Record<string, string>;
+      }>('/api/status'),
+    );
+  }
 }

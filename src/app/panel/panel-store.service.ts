@@ -168,15 +168,18 @@ export class PanelStoreService {
     channel: PublishChannel,
     message: string,
     externalUrl?: string,
+    status: Publication['status'] = 'simulated',
+    remoteId?: string,
   ) {
     const pub: Publication = {
       id: `pub-${Date.now()}`,
       propertyId,
       channel,
-      status: 'simulated',
+      status,
       message,
       at: new Date().toISOString(),
       externalUrl,
+      remoteId,
     };
     this.publications.set([pub, ...this.publications()]);
     localStorage.setItem(PUBS_KEY, JSON.stringify(this.publications()));

@@ -21,10 +21,11 @@ export type Publication = {
   id: string;
   propertyId: string;
   channel: PublishChannel;
-  status: 'simulated' | 'queued' | 'error';
+  status: 'simulated' | 'queued' | 'error' | 'published';
   message: string;
   at: string;
   externalUrl?: string;
+  remoteId?: string;
 };
 
 export type PropertyStats = {

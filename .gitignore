@@ -40,3 +40,7 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+# Secrets y tokens locales de la API de publicación
+.env
+server/.data/
